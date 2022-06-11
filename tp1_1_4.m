@@ -46,7 +46,7 @@ T3_ang=sum(T3/length(T3));
 T2_ang=sum(T2/length(T2));
 T1_ang=sum(T1/length(T1));
 
-sys_G_ang=tf(K,conv([T1_ang 1],[T2_ang 1]))
+sys_G_ang=tf(K*[T3_ang 1],conv([T1_ang 1],[T2_ang 1]))
 [yo,to]=step(12*sys_G_ang,0.05-t_off);
 plot(t0,y,'r'), hold on 
 plot(t_t1+0.01,y_t1,'o')
@@ -57,14 +57,14 @@ plot(to+t_off,yo), axis([0 0.1 -0.2 0.2])
 
 %break
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Xx=[0; 0]; iii=0; t_etapa=1e-6;  tF=0.1;
+Xx=[0; 0]; iii=0; t_etapa=1e-6;  tF=85e-03;
 %Constantes del PID
 %color_='b';
 iii=0;
 jj=0;
 u=12; %f=1;
-for t=0.05:t_etapa:tF %va de o a tF y t_etapa es la vble (1e.-6 ) q toma valores cada ese tiempo
-    if iii*t_etapa>1e-3
+for t=0.01:t_etapa:tF %va de o a tF y t_etapa es la vble (1e.-6 ) q toma valores cada ese tiempo
+    if iii*t_etapa>40e-3
         u=u*(-1);  %para cambiar la tension
         iii=0;
     end
@@ -76,19 +76,14 @@ x2(jj)=Xx(2);%tension en el capacitor
 acc(jj)=u;
 end
 
-%t=0.05:t_etapa:tF;
-%subplot(3,1,1);hold on;
+% % % %
 figure
 plot(t0,y,'r')
-hold on 
-plot(t0,x1,'g');
+tr=0.01:t_etapa:tF;
+% figure
+hold on
+plot(tr,x1,'g');
 title('corriente');
 %subplot(3,1,3);hold on;
 %plot(t,acc,color_);title('tension');
 xlabel('Tiempo [Seg.]');
-%subplot(3,1,2);hold on;
-%plot(t,x2,color_);title('Tension del capacitor');
-% figure
-%%%[yout,yt]=lsim(sys_G_ang,u,t_etapa);
-%%%plot(yt,yout);
-
